@@ -30,6 +30,7 @@ public class UserDetailDTO implements Serializable, UserDetails {
     private String email;
     private String pass;
     private String profileImageUrl;
+    private boolean active;
     private ZonedDateTime createdAt;
 
     @Override
@@ -49,7 +50,7 @@ public class UserDetailDTO implements Serializable, UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.active;
     }
 
     @Override
