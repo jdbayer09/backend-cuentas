@@ -7,6 +7,8 @@ public record AuthenticationResponse(
         @Schema(description = "Token de autorización")
         String token,
         @Schema(description = "Fecha de expiración de la sesión")
-        String expirationToken
+        String expirationToken,
+        @Schema(description = "ID del usuario")
+        Long id
 ) {
 }
