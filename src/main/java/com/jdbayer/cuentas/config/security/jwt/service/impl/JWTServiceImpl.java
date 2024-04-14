@@ -54,14 +54,30 @@ public class JWTServiceImpl implements JWTService {
                 .compact();
     }
 
-    @Override
-    public long getExpirationTokenMillis() {
+    private long getExpirationTokenMillis() {
         Instant expirationToken = Instant.now().plus(expirationTokenDays, ChronoUnit.DAYS);
         return expirationToken.toEpochMilli();
     }
 
+    @Override
+    public Date getExpirationToken(String token) {
+        return getClaimsToken(token, Claims::getExpiration);
+    }
+
     private boolean isTokenExpired(String token) {
         return extraerExpiration(token).before(new Date());
+    }
+
+    private boolean validKey(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(resolve(token));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private Date extraerExpiration(String token) {
@@ -70,7 +86,7 @@ public class JWTServiceImpl implements JWTService {
 
     @Override
     public boolean validateToken(String token) {
-        return !isTokenExpired(token);
+        return !isTokenExpired(token) && validKey(token);
     }
 
     @Override

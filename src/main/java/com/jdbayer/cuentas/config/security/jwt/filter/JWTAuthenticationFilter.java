@@ -73,7 +73,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private AuthenticationResponse getAuthenticationResponse(String token, UserDetailDTO userData) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-        Date expirationToken = new Date(jwtService.getExpirationTokenMillis());
+        Date expirationToken = jwtService.getExpirationToken(JWTService.TOKEN_PREFIX + token);
         var user = new UserBaseResponse(userData.getId(), userData.getFullName(), userData.getEmail());
 
         return new AuthenticationResponse(token, sdf.format(expirationToken), user);
