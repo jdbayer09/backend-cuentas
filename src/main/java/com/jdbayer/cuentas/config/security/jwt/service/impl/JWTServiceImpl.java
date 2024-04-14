@@ -65,7 +65,7 @@ public class JWTServiceImpl implements JWTService {
     }
 
     private boolean isTokenExpired(String token) {
-        return extraerExpiration(token).before(new Date());
+        return extractExpiration(token).before(new Date());
     }
 
     private boolean validKey(String token) {
@@ -80,7 +80,7 @@ public class JWTServiceImpl implements JWTService {
         }
     }
 
-    private Date extraerExpiration(String token) {
+    private Date extractExpiration(String token) {
         return getClaimsToken(token, Claims::getExpiration);
     }
 
