@@ -3,6 +3,7 @@ package com.jdbayer.cuentas.config.security.jwt.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jdbayer.cuentas.api.models.dto.admin.UserDetailDTO;
 import com.jdbayer.cuentas.api.models.requests.security.AuthenticationRequest;
+import com.jdbayer.cuentas.api.models.responses.admin.UserBaseResponse;
 import com.jdbayer.cuentas.api.models.responses.base.ErrorResponse;
 import com.jdbayer.cuentas.api.models.responses.security.AuthenticationResponse;
 import com.jdbayer.cuentas.config.security.jwt.service.JWTService;
@@ -73,7 +74,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private AuthenticationResponse getAuthenticationResponse(String token, UserDetailDTO userData) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         Date expirationToken = new Date(jwtService.getExpirationTokenMillis());
-        return new AuthenticationResponse(token, sdf.format(expirationToken), userData.getId());
+        var user = new UserBaseResponse(userData.getId(), userData.getFullName(), userData.getEmail());
+
+        return new AuthenticationResponse(token, sdf.format(expirationToken), user);
     }
 
     @Override

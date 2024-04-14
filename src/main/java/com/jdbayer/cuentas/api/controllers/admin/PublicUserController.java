@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "Servicios publico de Usuarios", description = "Servicios públicos para registro y gestión de la contraseña")
 public class PublicUserController {
-
-
+/*
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Registro de usuarios.")
@@ -36,5 +35,5 @@ public class PublicUserController {
                                 mapper.dtoToResponse(userDTO)
                         )
                 );
-    }
+    } */
 }
