@@ -1,6 +1,7 @@
 package com.jdbayer.cuentas.config.controller;
 
 import com.jdbayer.cuentas.api.exceptions.base.NotFoundException;
+import com.jdbayer.cuentas.api.exceptions.security.UnauthorizedException;
 import com.jdbayer.cuentas.api.models.responses.base.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.ObjectNotFoundException;
@@ -19,6 +20,7 @@ import java.util.Objects;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.PRECONDITION_FAILED;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
 @RestControllerAdvice
@@ -60,6 +62,12 @@ public class ControllerAdvice {
     @ResponseStatus(NOT_FOUND)
     public ResponseEntity<ErrorResponse> handlerNotFoundException(final NotFoundException t) {
         return buildErrorResponse(t, t.getMessage(), NOT_FOUND);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(UNAUTHORIZED)
+    public ResponseEntity<ErrorResponse> handlerUnauthorizedException(final UnauthorizedException t) {
+        return buildErrorResponse(t, t.getMessage(), UNAUTHORIZED);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

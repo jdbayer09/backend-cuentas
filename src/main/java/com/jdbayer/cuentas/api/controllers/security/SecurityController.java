@@ -1,5 +1,6 @@
 package com.jdbayer.cuentas.api.controllers.security;
 
+import com.jdbayer.cuentas.api.exceptions.security.UnauthorizedException;
 import com.jdbayer.cuentas.api.models.mappers.UserMapper;
 import com.jdbayer.cuentas.api.models.responses.admin.UserBaseResponse;
 import com.jdbayer.cuentas.api.models.responses.base.ErrorResponse;
@@ -18,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -60,10 +60,10 @@ public class SecurityController {
             }
         }
         if (token.isEmpty())
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            throw new UnauthorizedException("No se envio un token");
 
         if (!jwtService.validateToken(token))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            throw new UnauthorizedException("El token enviado no es valido");
 
         String userName = jwtService.getUserApp(token);
 
