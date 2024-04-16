@@ -123,6 +123,16 @@ public class UserServiceImpl implements IUserService {
         return userMapper.entityToDto(userRepository.save(user));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public UserDTO getUserById(Long id) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new NotExistUserException("El usuario no existe")
+                );
+        return userMapper.entityToDto(user);
+    }
+
     private UserEntity getUserByEncryptedCode(String encriptedCode) {
         var code = "";
         try {
