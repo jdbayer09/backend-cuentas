@@ -1,5 +1,6 @@
 package com.jdbayer.cuentas.api.services.core.impl;
 
+import com.jdbayer.cuentas.api.exceptions.core.NotExistCategoryException;
 import com.jdbayer.cuentas.api.models.dto.admin.UserDTO;
 import com.jdbayer.cuentas.api.models.dto.core.CategoryDTO;
 import com.jdbayer.cuentas.api.models.entities.core.CategoryEntity;
@@ -26,18 +27,23 @@ public class CategoryServiceImpl implements ICategoryService {
     @Transactional
     public CategoryDTO createCategory(UserDTO user, CategoryRequest request) {
         var entity = new CategoryEntity();
-        entity.setUser(userMapper.dtoToEntity(user));
-        entity.setName(request.getName().toUpperCase().trim());
-        entity.setDescription(request.getDescription().trim());
-        entity.setIcon(request.getIcon().toLowerCase().trim());
-        entity.setColor(request.getColor().toUpperCase().trim());
-        return mapper.entityToDto(categoryRepository.save(entity));
+        return createOrUpdateCategory(entity, request, user);
     }
 
     @Override
     @Transactional
     public CategoryDTO updateCategory(UserDTO user, CategoryRequest request, Long idCategory) {
-        return null;
+        var entity = categoryRepository.findById(idCategory).orElseThrow(() -> new NotExistCategoryException("No existe la categoría"));
+        return createOrUpdateCategory(entity, request, user);
+    }
+
+    private CategoryDTO createOrUpdateCategory(CategoryEntity category, CategoryRequest request, UserDTO user) {
+        category.setUser(userMapper.dtoToEntity(user));
+        category.setName(request.getName().toUpperCase().trim());
+        category.setDescription(request.getDescription().trim());
+        category.setIcon(request.getIcon().toLowerCase().trim());
+        category.setColor(request.getColor().toUpperCase().trim());
+        return mapper.entityToDto(categoryRepository.save(category));
     }
 
     @Override
