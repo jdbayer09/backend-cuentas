@@ -111,7 +111,8 @@ public class ControllerAdvice {
 
         if (error.contains("user_unique_email"))
             message = "El Correo Electrónico introducido ya está registrado (" + val + ")";
-
+        else if (error.contains("category_unique_name"))
+            message = "Esta categoría ya esta registrada (" + val + ")";
         return message;
     }
 
