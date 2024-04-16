@@ -38,6 +38,9 @@ public class UserEntity extends BaseEntity {
     @Column(name = "image_profile_url", length = 500)
     private String profileImageUrl;
 
+    @Column(name = "is_active", nullable = false)
+    private boolean active;
+
     public String getFullName(){
         return this.name + " " + this.lastName;
     }

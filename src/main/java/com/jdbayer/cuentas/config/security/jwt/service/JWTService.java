@@ -5,6 +5,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 
 public interface JWTService {
     String TOKEN_PREFIX = "Bearer ";
@@ -12,5 +13,5 @@ public interface JWTService {
     boolean validateToken(String token);
     String getUserApp(String token);
     Collection<SimpleGrantedAuthority> getRoles(String token) throws IOException;
-    long getExpirationTokenMillis();
+    Date getExpirationToken(String token);
 }
