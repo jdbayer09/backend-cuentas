@@ -130,6 +130,8 @@ public class UserServiceImpl implements IUserService {
                 .orElseThrow(() ->
                         new NotExistUserException("El usuario no existe")
                 );
+        if (!user.isActive())
+            throw new NotExistUserException("El usuario no esta activado");
         return userMapper.entityToDto(user);
     }
 
