@@ -90,8 +90,8 @@ public class CategoryController {
         @Operation(summary = "Deshabilita la categoría.")
         public ResponseEntity<MessageResponse<Long>> disableCategory(
                 @PathVariable Long idUser, @PathVariable Long idCategory) {
-                userService.getUserById(idUser);
-                categoryService.disableCategory(idCategory);
+                var userDto = userService.getUserById(idUser);
+                categoryService.disableCategory(userDto, idCategory);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse<>(
                                 "Éxito!",
@@ -106,8 +106,8 @@ public class CategoryController {
         @Operation(summary = "Habilita la categoría.")
         public ResponseEntity<MessageResponse<Long>> enableCategory(
                 @PathVariable Long idUser, @PathVariable Long idCategory) {
-                userService.getUserById(idUser);
-                categoryService.enableCategory(idCategory);
+                var userDto = userService.getUserById(idUser);
+                categoryService.enableCategory(userDto, idCategory);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse<>(
                                 "Éxito!",

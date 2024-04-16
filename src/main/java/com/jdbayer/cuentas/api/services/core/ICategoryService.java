@@ -9,10 +9,10 @@ import java.util.List;
 public interface ICategoryService {
     CategoryDTO createCategory(UserDTO user, CategoryRequest request);
     CategoryDTO updateCategory(UserDTO user, CategoryRequest request, Long idCategory);
-    void disableCategory(Long idCategory);
-    void enableCategory(Long idCategory);
+    void disableCategory(UserDTO user, Long idCategory);
+    void enableCategory(UserDTO user, Long idCategory);
     List<CategoryDTO> getAllCategories(UserDTO user);
     List<CategoryDTO> getActiveCategories(UserDTO user);
-    CategoryDTO getCategoryById(Long idCategory);
-    CategoryDTO getActiveCategoryById(Long idCategory);
+    CategoryDTO getCategoryById(UserDTO user, Long idCategory);
+    CategoryDTO getActiveCategoryById(UserDTO user, Long idCategory);
 }

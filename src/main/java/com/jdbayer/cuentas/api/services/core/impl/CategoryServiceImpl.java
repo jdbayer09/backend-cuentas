@@ -34,7 +34,7 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     @Transactional
     public CategoryDTO updateCategory(UserDTO user, CategoryRequest request, Long idCategory) {
-        var entity = categoryRepository.findById(idCategory).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
+        var entity = categoryRepository.findByIdAndUser_Id(idCategory, user.getId()).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
         return createOrUpdateCategory(entity, request, user);
     }
 
@@ -49,16 +49,16 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     @Transactional
-    public void disableCategory(Long idCategory) {
-        var entity = categoryRepository.findById(idCategory).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
+    public void disableCategory(UserDTO user, Long idCategory) {
+        var entity = categoryRepository.findByIdAndUser_Id(idCategory, user.getId()).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
         entity.setActive(false);
         categoryRepository.save(entity);
     }
 
     @Override
     @Transactional
-    public void enableCategory(Long idCategory) {
-        var entity = categoryRepository.findById(idCategory).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
+    public void enableCategory(UserDTO user, Long idCategory) {
+        var entity = categoryRepository.findByIdAndUser_Id(idCategory, user.getId()).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
         entity.setActive(true);
         categoryRepository.save(entity);
     }
@@ -82,15 +82,15 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public CategoryDTO getCategoryById(Long idCategory) {
-        var entity = categoryRepository.findById(idCategory).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
+    public CategoryDTO getCategoryById(UserDTO user, Long idCategory) {
+        var entity = categoryRepository.findByIdAndUser_Id(idCategory, user.getId()).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
         return mapper.entityToDto(entity);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public CategoryDTO getActiveCategoryById(Long idCategory) {
-        var entity = categoryRepository.findById(idCategory).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
+    public CategoryDTO getActiveCategoryById(UserDTO user, Long idCategory) {
+        var entity = categoryRepository.findByIdAndUser_Id(idCategory, user.getId()).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
         if (!entity.isActive()) {
             throw new NotExistCategoryException("La categoría no esta activa");
         }
