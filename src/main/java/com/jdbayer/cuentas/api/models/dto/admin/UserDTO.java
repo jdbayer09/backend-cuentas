@@ -25,5 +25,6 @@ public class UserDTO implements Serializable {
     private String pass;
     private String profileImageUrl;
     private boolean active;
+    private boolean resetPass;
     private ZonedDateTime createdAt;
 }

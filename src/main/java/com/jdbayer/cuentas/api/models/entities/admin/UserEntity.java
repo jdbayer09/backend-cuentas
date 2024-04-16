@@ -41,6 +41,9 @@ public class UserEntity extends BaseEntity {
     @Column(name = "is_active", nullable = false)
     private boolean active;
 
+    @Column(name = "is_resetPass", nullable = false)
+    private boolean resetPass;
+
     public String getFullName(){
         return this.name + " " + this.lastName;
     }
