@@ -2,7 +2,7 @@ package com.jdbayer.cuentas.config.controller;
 
 import com.jdbayer.cuentas.api.exceptions.base.BadRequestException;
 import com.jdbayer.cuentas.api.exceptions.base.NotFoundException;
-import com.jdbayer.cuentas.api.exceptions.security.EmailException;
+import com.jdbayer.cuentas.api.exceptions.util.EmailException;
 import com.jdbayer.cuentas.api.exceptions.security.UnauthorizedException;
 import com.jdbayer.cuentas.api.models.responses.base.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;

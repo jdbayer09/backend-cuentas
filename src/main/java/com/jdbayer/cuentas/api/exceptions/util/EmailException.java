@@ -1,4 +1,4 @@
-package com.jdbayer.cuentas.api.exceptions.security;
+package com.jdbayer.cuentas.api.exceptions.util;
 
 import java.io.Serial;
 

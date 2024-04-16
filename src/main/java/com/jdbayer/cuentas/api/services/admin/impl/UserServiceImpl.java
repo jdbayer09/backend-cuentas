@@ -2,7 +2,8 @@ package com.jdbayer.cuentas.api.services.admin.impl;
 
 import com.jdbayer.cuentas.api.exceptions.admin.NotExistUserException;
 import com.jdbayer.cuentas.api.exceptions.admin.NotPasswordEqualsException;
-import com.jdbayer.cuentas.api.exceptions.security.EmailException;
+import com.jdbayer.cuentas.api.exceptions.util.EmailException;
+import com.jdbayer.cuentas.api.exceptions.util.NotEncryptException;
 import com.jdbayer.cuentas.api.models.dto.admin.UserDTO;
 import com.jdbayer.cuentas.api.models.dto.admin.UserDetailDTO;
 import com.jdbayer.cuentas.api.models.entities.admin.UserEntity;
@@ -10,6 +11,7 @@ import com.jdbayer.cuentas.api.models.mappers.UserMapper;
 import com.jdbayer.cuentas.api.models.requests.admin.RegisterUserRequest;
 import com.jdbayer.cuentas.api.repositories.IUserRepository;
 import com.jdbayer.cuentas.api.services.admin.IUserService;
+import com.jdbayer.cuentas.api.services.util.IEncryptService;
 import com.jdbayer.cuentas.api.services.util.IMailService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class UserServiceImpl implements IUserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final IMailService mailService;
+    private final IEncryptService encryptService;
 
     @Value("${cuentas.frontend.host}")
     private String frontHost;
@@ -54,16 +57,21 @@ public class UserServiceImpl implements IUserService {
         entity.setLastName(capitaliceString(registerUserRequest.getLastName()));
         entity.setPass(passwordEncoder.encode(registerUserRequest.getPassword()));
         var resp = userRepository.save(entity);
+        var code = "";
+        try {
+            code = encryptService.encrypt(resp.getId().toString());
+        } catch (NotEncryptException ex) {
+            throw new EmailException("No se pudo registrar su usuario, intente de nuevo mas tarde", ex);
+        }
         var body = "Hola, " + resp.getFullName() + "\n\n";
         body += "Para poder continuar con la aplicacion es necesario que active su cuenta en el siguiente enlace: \n \n";
-        body += frontHost + "p/activate/dasdads";
+        body += frontHost + "p/activate/"+code;
 
         try {
             mailService.sendMail(resp.getEmail(), "Activación de cuenta", body);
         } catch (MessagingException ex) {
             throw new EmailException("No se pudo registrar su usuario, intente de nuevo mas tarde", ex);
         }
-
         return userMapper.entityToDto(resp);
     }
 
