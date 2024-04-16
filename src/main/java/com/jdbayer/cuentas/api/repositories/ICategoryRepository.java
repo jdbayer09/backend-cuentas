@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface ICategoryRepository extends JpaRepository<CategoryEntity, Long> {
-    List<CategoryEntity> findAllByActiveIsTrueAndUser_Id(Long id);
-    List<CategoryEntity> findAllByUser_Id(Long id);
+    List<CategoryEntity> findAllByActiveIsTrueAndUser_IdOrderByName(Long id);
+    List<CategoryEntity> findAllByUser_IdOrderByName(Long id);
     Optional<CategoryEntity> findByIdAndUser_Id(Long id, Long userId);
 }

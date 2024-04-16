@@ -67,14 +67,14 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     @Transactional(readOnly = true)
     public List<CategoryDTO> getAllCategories(UserDTO user) {
-        List<CategoryEntity> categories = categoryRepository.findAllByUser_Id(user.getId());
+        List<CategoryEntity> categories = categoryRepository.findAllByUser_IdOrderByName(user.getId());
         return categories.stream().map(mapper::entityToDto).toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<CategoryDTO> getActiveCategories(UserDTO user) {
-        List<CategoryEntity> categories = categoryRepository.findAllByActiveIsTrueAndUser_Id(user.getId());
+        List<CategoryEntity> categories = categoryRepository.findAllByActiveIsTrueAndUser_IdOrderByName(user.getId());
         if (categories.isEmpty()) {
             throw new NotExistCategoryException("No hay categorías disponibles");
         }
