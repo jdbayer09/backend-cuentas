@@ -22,6 +22,7 @@ public class CategoryServiceImpl implements ICategoryService {
     private final ICategoryRepository categoryRepository;
     private final CategoryMapper mapper;
     private final UserMapper userMapper;
+    private static final String NOT_EXIST_MESSAGE = "No existe la categoría";
 
     @Override
     @Transactional
@@ -33,7 +34,7 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     @Transactional
     public CategoryDTO updateCategory(UserDTO user, CategoryRequest request, Long idCategory) {
-        var entity = categoryRepository.findById(idCategory).orElseThrow(() -> new NotExistCategoryException("No existe la categoría"));
+        var entity = categoryRepository.findById(idCategory).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
         return createOrUpdateCategory(entity, request, user);
     }
 
@@ -49,13 +50,17 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     @Transactional
     public void disableCategory(Long idCategory) {
-
+        var entity = categoryRepository.findById(idCategory).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
+        entity.setActive(false);
+        categoryRepository.save(entity);
     }
 
     @Override
     @Transactional
     public void enableCategory(Long idCategory) {
-
+        var entity = categoryRepository.findById(idCategory).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
+        entity.setActive(true);
+        categoryRepository.save(entity);
     }
 
     @Override
