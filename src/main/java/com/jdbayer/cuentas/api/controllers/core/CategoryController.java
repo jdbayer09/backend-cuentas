@@ -1,10 +1,13 @@
 package com.jdbayer.cuentas.api.controllers.core;
 
+import com.jdbayer.cuentas.api.models.mappers.CategoryMapper;
 import com.jdbayer.cuentas.api.models.requests.core.CategoryRequest;
 import com.jdbayer.cuentas.api.models.responses.base.ErrorResponse;
 import com.jdbayer.cuentas.api.models.responses.base.MessageResponse;
 import com.jdbayer.cuentas.api.models.responses.core.BaseCategoryResponse;
 import com.jdbayer.cuentas.api.models.responses.core.CategoryResponse;
+import com.jdbayer.cuentas.api.services.admin.IUserService;
+import com.jdbayer.cuentas.api.services.core.ICategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -44,19 +47,23 @@ import java.util.List;
 @SecurityRequirement(name = "Bearer Authentication")
 public class CategoryController {
 
+        private final CategoryMapper mapper;
+        private final ICategoryService categoryService;
+        private final IUserService userService;
+
         @PostMapping("/create")
         @ResponseStatus(HttpStatus.CREATED)
         @Operation(summary = "Creación de categoría.")
         public ResponseEntity<MessageResponse<BaseCategoryResponse>> createCategory(
                 @RequestBody @Valid CategoryRequest request,
                 @PathVariable Long idUser) {
-                //var userDto = userService.registerUser(registerUserRequest);
-
+                var userDto = userService.getUserById(idUser);
+                var categoryDto = categoryService.createCategory(userDto, request);
                 return ResponseEntity.status(HttpStatus.CREATED).body(
                         new MessageResponse<>(
                                 "Éxito!",
                                 "Su categoría se ha creado con éxito.",
-                                null
+                                mapper.dtoToBaseResponse(categoryDto)
                         )
                 );
         }
@@ -67,13 +74,13 @@ public class CategoryController {
         public ResponseEntity<MessageResponse<BaseCategoryResponse>> updateCategory(
                 @RequestBody @Valid CategoryRequest request,
                 @PathVariable Long idUser, @PathVariable Long idCategory) {
-
-
+                var userDto = userService.getUserById(idUser);
+                var categoryDto = categoryService.updateCategory(userDto, request, idCategory);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse<>(
                                 "Éxito!",
                                 "Su categoría se ha actualizado con éxito.",
-                                null
+                                mapper.dtoToBaseResponse(categoryDto)
                         )
                 );
         }
@@ -83,11 +90,28 @@ public class CategoryController {
         @Operation(summary = "Deshabilita la categoría.")
         public ResponseEntity<MessageResponse<Long>> disableCategory(
                 @PathVariable Long idUser, @PathVariable Long idCategory) {
-
+                userService.getUserById(idUser);
+                categoryService.disableCategory(idCategory);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse<>(
                                 "Éxito!",
                                 "Su categoría se ha deshabilitado con éxito.",
+                                idCategory
+                        )
+                );
+        }
+
+        @PatchMapping("/enable/{idCategory}")
+        @ResponseStatus(HttpStatus.OK)
+        @Operation(summary = "Habilita la categoría.")
+        public ResponseEntity<MessageResponse<Long>> enableCategory(
+                @PathVariable Long idUser, @PathVariable Long idCategory) {
+                userService.getUserById(idUser);
+                categoryService.enableCategory(idCategory);
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new MessageResponse<>(
+                                "Éxito!",
+                                "Su categoría se ha habilitado con éxito.",
                                 idCategory
                         )
                 );
@@ -98,8 +122,10 @@ public class CategoryController {
         @Operation(summary = "Lista todas las categorías")
         public ResponseEntity<List<CategoryResponse>> listAllCategory(
                 @PathVariable Long idUser) {
+                var userDto = userService.getUserById(idUser);
+                var listCategoriesDTO = categoryService.getAllCategories(userDto);
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        new ArrayList<>()
+                        listCategoriesDTO.stream().map(mapper::dtoToResponse).toList()
                 );
         }
 
@@ -108,24 +134,12 @@ public class CategoryController {
         @Operation(summary = "Lista todas las categorías activas")
         public ResponseEntity<List<BaseCategoryResponse>> listActiveCategory(
                 @PathVariable Long idUser) {
+                var userDto = userService.getUserById(idUser);
+                var listCategoriesDTO = categoryService.getActiveCategories(userDto);
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        new ArrayList<>()
+                        listCategoriesDTO.stream().map(mapper::dtoToBaseResponse).toList()
                 );
         }
 
-        @PatchMapping("/enable/{idCategory}")
-        @ResponseStatus(HttpStatus.OK)
-        @Operation(summary = "Habilita la categoría.")
-        public ResponseEntity<MessageResponse<Long>> enableCategory(
-                @PathVariable Long idUser, @PathVariable Long idCategory) {
-
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new MessageResponse<>(
-                                "Éxito!",
-                                "Su categoría se ha habilitado con éxito.",
-                                idCategory
-                        )
-                );
-        }
 
 }
