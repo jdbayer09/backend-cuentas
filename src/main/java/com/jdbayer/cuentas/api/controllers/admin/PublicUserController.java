@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +45,20 @@ public class PublicUserController {
         );
     }
 
+    @PutMapping("/activate-user/{activationCode}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Registro de usuarios.")
+    public ResponseEntity<MessageResponse<UserBaseResponse>> activateUser(@PathVariable String activationCode) {
+        var userDto = userService.activateUser(activationCode);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new MessageResponse<>(
+                        "Exito!",
+                        userDto.getFullName() + ", Se ha activado el usuario correctamente.",
+                        userMapper.dtoToUserBaseResponse(userDto)
+                )
+        );
+    }
+
     @PutMapping("/forgot-password/{idUser}")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Registro de usuarios.")
@@ -57,14 +72,6 @@ public class PublicUserController {
     @Operation(summary = "Registro de usuarios.")
     public ResponseEntity<MessageResponse<String>> updatePassword() {
         //TODO: Implementar update password, debe de validar que el usuario solicite el cambio de contraseña.
-        throw new RuntimeException("Not implemented");
-    }
-
-    @PutMapping("/activate-user/{idRequest}")
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Registro de usuarios.")
-    public ResponseEntity<MessageResponse<String>> activateUser() {
-        //TODO: Implementar activate user, debe validar que la URL enviada sea la correcta.
         throw new RuntimeException("Not implemented");
     }
 }

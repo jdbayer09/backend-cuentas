@@ -75,6 +75,23 @@ public class UserServiceImpl implements IUserService {
         return userMapper.entityToDto(resp);
     }
 
+    @Override
+    @Transactional
+    public UserDTO activateUser(String activationCode) {
+        var code = "";
+        try {
+            code = encryptService.decrypt(activationCode);
+        } catch (NotEncryptException ex) {
+            throw new EmailException("No se pudo activar su usuario, intente de nuevo mas tarde", ex);
+        }
+        Long idUser = Long.parseLong(code);
+        var user = userRepository.findById(idUser).orElseThrow(() -> new NotExistUserException("El usuario no existe"));
+        if (user.isActive())
+            throw new NotExistUserException("El usuario ya esta activado");
+        user.setActive(true);
+        return userMapper.entityToDto(userRepository.save(user));
+    }
+
     private String capitaliceString(String val) {
         if (val == null || val.isEmpty()) return val;
         StringBuilder resp = new StringBuilder();
