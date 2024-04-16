@@ -2,7 +2,9 @@ package com.jdbayer.cuentas.api.services.core.impl;
 
 import com.jdbayer.cuentas.api.models.dto.admin.UserDTO;
 import com.jdbayer.cuentas.api.models.dto.core.CategoryDTO;
+import com.jdbayer.cuentas.api.models.entities.core.CategoryEntity;
 import com.jdbayer.cuentas.api.models.mappers.CategoryMapper;
+import com.jdbayer.cuentas.api.models.mappers.UserMapper;
 import com.jdbayer.cuentas.api.models.requests.core.CategoryRequest;
 import com.jdbayer.cuentas.api.repositories.ICategoryRepository;
 import com.jdbayer.cuentas.api.services.core.ICategoryService;
@@ -18,11 +20,18 @@ public class CategoryServiceImpl implements ICategoryService {
 
     private final ICategoryRepository categoryRepository;
     private final CategoryMapper mapper;
+    private final UserMapper userMapper;
 
     @Override
     @Transactional
     public CategoryDTO createCategory(UserDTO user, CategoryRequest request) {
-        return null;
+        var entity = new CategoryEntity();
+        entity.setUser(userMapper.dtoToEntity(user));
+        entity.setName(request.getName().toUpperCase().trim());
+        entity.setDescription(request.getDescription().trim());
+        entity.setIcon(request.getIcon().toLowerCase().trim());
+        entity.setColor(request.getColor().toUpperCase().trim());
+        return mapper.entityToDto(categoryRepository.save(entity));
     }
 
     @Override
