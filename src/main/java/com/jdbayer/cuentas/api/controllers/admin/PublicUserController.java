@@ -47,7 +47,7 @@ public class PublicUserController {
 
     @PutMapping("/activate-user/{activationCode}")
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Registro de usuarios.")
+    @Operation(summary = "Activacion de usuario")
     public ResponseEntity<MessageResponse<UserBaseResponse>> activateUser(@PathVariable String activationCode) {
         var userDto = userService.activateUser(activationCode);
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -59,12 +59,18 @@ public class PublicUserController {
         );
     }
 
-    @PutMapping("/forgot-password/{idUser}")
+    @PutMapping("/forgot-password/{email}")
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Registro de usuarios.")
-    public ResponseEntity<MessageResponse<String>> forgotPassword() {
-        //TODO: Implementar funcion de olvido contraseña.
-        throw new RuntimeException("Not implemented");
+    @Operation(summary = "Solicitar cambio de contraseña")
+    public ResponseEntity<MessageResponse<UserBaseResponse>> forgotPassword(@PathVariable String email) {
+        var userDto = userService.forgotPassword(email);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new MessageResponse<>(
+                        "Exito!",
+                        userDto.getFullName() + ", Se ha enviado un enlace para actualizar su contraseña.",
+                        userMapper.dtoToUserBaseResponse(userDto)
+                )
+        );
     }
 
     @PutMapping("/update-password/{idUser}/{idRequest}")

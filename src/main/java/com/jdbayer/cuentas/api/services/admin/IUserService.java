@@ -8,4 +8,5 @@ public interface IUserService {
     UserDetailDTO getUserDetailByEmail(String email);
     UserDTO registerUser(RegisterUserRequest registerUserRequest);
     UserDTO activateUser(String activationCode);
+    UserDTO forgotPassword(String email);
 }

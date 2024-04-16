@@ -64,7 +64,7 @@ public class UserServiceImpl implements IUserService {
             throw new EmailException("No se pudo registrar su usuario, intente de nuevo mas tarde", ex);
         }
         var body = "Hola, " + resp.getFullName() + "\n\n";
-        body += "Para poder continuar con la aplicacion es necesario que active su cuenta en el siguiente enlace: \n \n";
+        body += "Para poder continuar con la aplicación es necesario que active su cuenta en el siguiente enlace: \n \n";
         body += frontHost + "p/activate/"+code;
 
         try {
@@ -90,6 +90,32 @@ public class UserServiceImpl implements IUserService {
             throw new NotExistUserException("El usuario ya esta activado");
         user.setActive(true);
         return userMapper.entityToDto(userRepository.save(user));
+    }
+
+    @Override
+    @Transactional
+    public UserDTO forgotPassword(String email) {
+        var user = userRepository.findByEmail(email).orElseThrow(() -> new NotExistUserException("El usuario no existe"));
+        user.setActive(true);
+        user.setResetPass(true);
+
+        var resp = userRepository.save(user);
+        var code = "";
+        try {
+            code = encryptService.encrypt(resp.getId().toString());
+        } catch (NotEncryptException ex) {
+            throw new EmailException("No se pudo solicitar el cambio de contraseña", ex);
+        }
+        var body = "Hola, " + resp.getFullName() + "\n\n";
+        body += "Para poder actualizar su contraseña ingrese al siguiente enlace: \n \n";
+        body += frontHost + "p/change-pass/" + code;
+
+        try {
+            mailService.sendMail(resp.getEmail(), "Restablecer contraseña", body);
+        } catch (MessagingException ex) {
+            throw new EmailException("No se pudo solicitar el cambio de contraseña", ex);
+        }
+        return userMapper.entityToDto(resp);
     }
 
     private String capitaliceString(String val) {
