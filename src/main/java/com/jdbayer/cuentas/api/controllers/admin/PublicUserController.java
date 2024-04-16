@@ -2,6 +2,7 @@ package com.jdbayer.cuentas.api.controllers.admin;
 
 import com.jdbayer.cuentas.api.models.mappers.UserMapper;
 import com.jdbayer.cuentas.api.models.requests.admin.RegisterUserRequest;
+import com.jdbayer.cuentas.api.models.requests.admin.ResetPassRequest;
 import com.jdbayer.cuentas.api.models.responses.admin.UserBaseResponse;
 import com.jdbayer.cuentas.api.models.responses.base.MessageResponse;
 import com.jdbayer.cuentas.api.services.admin.IUserService;
@@ -73,11 +74,20 @@ public class PublicUserController {
         );
     }
 
-    @PutMapping("/update-password/{idUser}/{idRequest}")
+    @PutMapping("/change-password/{code}")
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Registro de usuarios.")
-    public ResponseEntity<MessageResponse<String>> updatePassword() {
-        //TODO: Implementar update password, debe de validar que el usuario solicite el cambio de contraseña.
-        throw new RuntimeException("Not implemented");
+    @Operation(summary = "Cambiar la contraseña")
+    public ResponseEntity<MessageResponse<UserBaseResponse>> updatePassword(
+            @PathVariable String code,
+            @RequestBody @Valid ResetPassRequest request
+    ) {
+        var userDto = userService.resetPassword(code, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new MessageResponse<>(
+                        "Exito!",
+                        "Se ha actualizado la contraseña correctamente.",
+                        userMapper.dtoToUserBaseResponse(userDto)
+                )
+        );
     }
 }

@@ -9,6 +9,7 @@ import com.jdbayer.cuentas.api.models.dto.admin.UserDetailDTO;
 import com.jdbayer.cuentas.api.models.entities.admin.UserEntity;
 import com.jdbayer.cuentas.api.models.mappers.UserMapper;
 import com.jdbayer.cuentas.api.models.requests.admin.RegisterUserRequest;
+import com.jdbayer.cuentas.api.models.requests.admin.ResetPassRequest;
 import com.jdbayer.cuentas.api.repositories.IUserRepository;
 import com.jdbayer.cuentas.api.services.admin.IUserService;
 import com.jdbayer.cuentas.api.services.util.IEncryptService;
@@ -78,14 +79,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     @Transactional
     public UserDTO activateUser(String activationCode) {
-        var code = "";
-        try {
-            code = encryptService.decrypt(activationCode);
-        } catch (NotEncryptException ex) {
-            throw new EmailException("No se pudo activar su usuario, intente de nuevo mas tarde", ex);
-        }
-        Long idUser = Long.parseLong(code);
-        var user = userRepository.findById(idUser).orElseThrow(() -> new NotExistUserException("El usuario no existe"));
+        var user = getUserByEncryptedCode(activationCode);
         if (user.isActive())
             throw new NotExistUserException("El usuario ya esta activado");
         user.setActive(true);
@@ -116,6 +110,28 @@ public class UserServiceImpl implements IUserService {
             throw new EmailException("No se pudo solicitar el cambio de contraseña", ex);
         }
         return userMapper.entityToDto(resp);
+    }
+
+    @Override
+    @Transactional
+    public UserDTO resetPassword(String code, ResetPassRequest request) {
+        if (!request.getPassword().equals(request.getConfirmPassword()))
+            throw new NotPasswordEqualsException("Las contraseñas no coinciden");
+        var user = getUserByEncryptedCode(code);
+        user.setResetPass(false);
+        user.setPass(passwordEncoder.encode(request.getPassword()));
+        return userMapper.entityToDto(userRepository.save(user));
+    }
+
+    private UserEntity getUserByEncryptedCode(String encriptedCode) {
+        var code = "";
+        try {
+            code = encryptService.decrypt(encriptedCode);
+        } catch (NotEncryptException ex) {
+            throw new EmailException("Error en el sistema, intente de nuevo mas tarde", ex);
+        }
+        Long idUser = Long.parseLong(code);
+        return userRepository.findById(idUser).orElseThrow(() -> new NotExistUserException("El usuario no existe"));
     }
 
     private String capitaliceString(String val) {
