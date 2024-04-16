@@ -3,6 +3,8 @@ package com.jdbayer.cuentas.api.controllers.core;
 import com.jdbayer.cuentas.api.models.requests.core.CategoryRequest;
 import com.jdbayer.cuentas.api.models.responses.base.ErrorResponse;
 import com.jdbayer.cuentas.api.models.responses.base.MessageResponse;
+import com.jdbayer.cuentas.api.models.responses.core.BaseCategoryResponse;
+import com.jdbayer.cuentas.api.models.responses.core.CategoryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -45,7 +47,7 @@ public class CategoryController {
         @PostMapping("/create")
         @ResponseStatus(HttpStatus.CREATED)
         @Operation(summary = "Creación de categoría.")
-        public ResponseEntity<MessageResponse<String>> createCategory(
+        public ResponseEntity<MessageResponse<BaseCategoryResponse>> createCategory(
                 @RequestBody @Valid CategoryRequest request,
                 @PathVariable Long idUser) {
                 //var userDto = userService.registerUser(registerUserRequest);
@@ -54,7 +56,7 @@ public class CategoryController {
                         new MessageResponse<>(
                                 "Éxito!",
                                 "Su categoría se ha creado con éxito.",
-                                ""
+                                null
                         )
                 );
         }
@@ -62,7 +64,7 @@ public class CategoryController {
         @PutMapping("/update/{idCategory}")
         @ResponseStatus(HttpStatus.OK)
         @Operation(summary = "Actualización de categoría.")
-        public ResponseEntity<MessageResponse<String>> updateCategory(
+        public ResponseEntity<MessageResponse<BaseCategoryResponse>> updateCategory(
                 @RequestBody @Valid CategoryRequest request,
                 @PathVariable Long idUser, @PathVariable Long idCategory) {
 
@@ -71,7 +73,7 @@ public class CategoryController {
                         new MessageResponse<>(
                                 "Éxito!",
                                 "Su categoría se ha actualizado con éxito.",
-                                ""
+                                null
                         )
                 );
         }
@@ -94,7 +96,7 @@ public class CategoryController {
         @GetMapping("/list-all")
         @ResponseStatus(HttpStatus.OK)
         @Operation(summary = "Lista todas las categorías")
-        public ResponseEntity<List<String>> listAllCategory(
+        public ResponseEntity<List<CategoryResponse>> listAllCategory(
                 @PathVariable Long idUser) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ArrayList<>()
@@ -104,7 +106,7 @@ public class CategoryController {
         @GetMapping("/list-active")
         @ResponseStatus(HttpStatus.OK)
         @Operation(summary = "Lista todas las categorías activas")
-        public ResponseEntity<List<String>> listActiveCategory(
+        public ResponseEntity<List<BaseCategoryResponse>> listActiveCategory(
                 @PathVariable Long idUser) {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ArrayList<>()
