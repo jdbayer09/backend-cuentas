@@ -11,5 +11,5 @@ public interface IUserService {
     UserDTO activateUser(String activationCode);
     UserDTO forgotPassword(String email);
     UserDTO resetPassword(String code, ResetPassRequest request);
-    UserDTO getUserById(Long id);
+    UserDTO getUserByEmail(String email);
 }

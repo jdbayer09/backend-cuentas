@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/category/{idUser}")
+@RequestMapping("/category")
 @RequiredArgsConstructor
 @Tag(name = "Controlador de categorías", description = "Controlador encargado de administrar las categorías")
 @ApiResponses(value = {
@@ -55,9 +56,9 @@ public class CategoryController {
         @ResponseStatus(HttpStatus.CREATED)
         @Operation(summary = "Creación de categoría.")
         public ResponseEntity<MessageResponse<BaseCategoryResponse>> createCategory(
-                @RequestBody @Valid CategoryRequest request,
-                @PathVariable Long idUser) {
-                var userDto = userService.getUserById(idUser);
+                Authentication auth,
+                @RequestBody @Valid CategoryRequest request) {
+                var userDto = userService.getUserByEmail(auth.getName());
                 var categoryDto = categoryService.createCategory(userDto, request);
                 return ResponseEntity.status(HttpStatus.CREATED).body(
                         new MessageResponse<>(
@@ -71,10 +72,9 @@ public class CategoryController {
         @PutMapping("/update/{idCategory}")
         @ResponseStatus(HttpStatus.OK)
         @Operation(summary = "Actualización de categoría.")
-        public ResponseEntity<MessageResponse<BaseCategoryResponse>> updateCategory(
-                @RequestBody @Valid CategoryRequest request,
-                @PathVariable Long idUser, @PathVariable Long idCategory) {
-                var userDto = userService.getUserById(idUser);
+        public ResponseEntity<MessageResponse<BaseCategoryResponse>> updateCategory(Authentication auth,
+                @RequestBody @Valid CategoryRequest request, @PathVariable Long idCategory) {
+                var userDto = userService.getUserByEmail(auth.getName());
                 var categoryDto = categoryService.updateCategory(userDto, request, idCategory);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse<>(
@@ -89,8 +89,9 @@ public class CategoryController {
         @ResponseStatus(HttpStatus.OK)
         @Operation(summary = "Deshabilita la categoría.")
         public ResponseEntity<MessageResponse<Long>> disableCategory(
-                @PathVariable Long idUser, @PathVariable Long idCategory) {
-                var userDto = userService.getUserById(idUser);
+                Authentication auth,
+                @PathVariable Long idCategory) {
+                var userDto = userService.getUserByEmail(auth.getName());
                 categoryService.disableCategory(userDto, idCategory);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse<>(
@@ -105,8 +106,9 @@ public class CategoryController {
         @ResponseStatus(HttpStatus.OK)
         @Operation(summary = "Habilita la categoría.")
         public ResponseEntity<MessageResponse<Long>> enableCategory(
-                @PathVariable Long idUser, @PathVariable Long idCategory) {
-                var userDto = userService.getUserById(idUser);
+                Authentication auth,
+                @PathVariable Long idCategory) {
+                var userDto = userService.getUserByEmail(auth.getName());
                 categoryService.enableCategory(userDto, idCategory);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse<>(
@@ -120,9 +122,8 @@ public class CategoryController {
         @GetMapping("/list-all")
         @ResponseStatus(HttpStatus.OK)
         @Operation(summary = "Lista todas las categorías")
-        public ResponseEntity<List<CategoryResponse>> listAllCategory(
-                @PathVariable Long idUser) {
-                var userDto = userService.getUserById(idUser);
+        public ResponseEntity<List<CategoryResponse>> listAllCategory(Authentication auth) {
+                var userDto = userService.getUserByEmail(auth.getName());
                 var listCategoriesDTO = categoryService.getAllCategories(userDto);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         listCategoriesDTO.stream().map(mapper::dtoToResponse).toList()
@@ -132,9 +133,8 @@ public class CategoryController {
         @GetMapping("/list-active")
         @ResponseStatus(HttpStatus.OK)
         @Operation(summary = "Lista todas las categorías activas")
-        public ResponseEntity<List<BaseCategoryResponse>> listActiveCategory(
-                @PathVariable Long idUser) {
-                var userDto = userService.getUserById(idUser);
+        public ResponseEntity<List<BaseCategoryResponse>> listActiveCategory(Authentication auth) {
+                var userDto = userService.getUserByEmail(auth.getName());
                 var listCategoriesDTO = categoryService.getActiveCategories(userDto);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         listCategoriesDTO.stream().map(mapper::dtoToBaseResponse).toList()

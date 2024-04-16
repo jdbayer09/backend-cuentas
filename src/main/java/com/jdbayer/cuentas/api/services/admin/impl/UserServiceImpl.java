@@ -125,8 +125,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDTO getUserById(Long id) {
-        var user = userRepository.findById(id)
+    public UserDTO getUserByEmail(String email) {
+        var user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new NotExistUserException("El usuario no existe")
                 );
