@@ -44,7 +44,7 @@ public class CategoryServiceImpl implements ICategoryService {
         category.setName(request.getName().toUpperCase().trim());
         category.setDescription(request.getDescription().trim());
         category.setIcon(request.getIcon().toLowerCase().trim());
-        category.setColor(request.getColor().toUpperCase().trim());
+        category.setColor(request.getColor().toLowerCase().trim());
         return mapper.entityToDto(categoryRepository.save(category));
     }
 
