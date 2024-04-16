@@ -62,7 +62,7 @@ public class UserServiceImpl implements IUserService {
         try {
             code = encryptService.encrypt(resp.getId().toString());
         } catch (NotEncryptException ex) {
-            throw new EmailException("No se pudo registrar su usuario, intente de nuevo mas tarde", ex);
+            throw new NotEncryptException("No se pudo registrar su usuario, intente de nuevo mas tarde", ex);
         }
         var body = "Hola, " + resp.getFullName() + "\n\n";
         body += "Para poder continuar con la aplicación es necesario que active su cuenta en el siguiente enlace: \n \n";
@@ -98,7 +98,7 @@ public class UserServiceImpl implements IUserService {
         try {
             code = encryptService.encrypt(resp.getId().toString());
         } catch (NotEncryptException ex) {
-            throw new EmailException("No se pudo solicitar el cambio de contraseña", ex);
+            throw new NotEncryptException("No se pudo solicitar el cambio de contraseña", ex);
         }
         var body = "Hola, " + resp.getFullName() + "\n\n";
         body += "Para poder actualizar su contraseña ingrese al siguiente enlace: \n \n";
@@ -128,7 +128,7 @@ public class UserServiceImpl implements IUserService {
         try {
             code = encryptService.decrypt(encriptedCode);
         } catch (NotEncryptException ex) {
-            throw new EmailException("Error en el sistema, intente de nuevo mas tarde", ex);
+            throw new NotEncryptException("Error en el sistema, intente de nuevo mas tarde", ex);
         }
         Long idUser = Long.parseLong(code);
         return userRepository.findById(idUser).orElseThrow(() -> new NotExistUserException("El usuario no existe"));
