@@ -13,4 +13,6 @@ public interface ICategoryService {
     void enableCategory(Long idCategory);
     List<CategoryDTO> getAllCategories(UserDTO user);
     List<CategoryDTO> getActiveCategories(UserDTO user);
+    CategoryDTO getCategoryById(Long idCategory);
+    CategoryDTO getActiveCategoryById(Long idCategory);
 }

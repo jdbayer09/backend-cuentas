@@ -42,4 +42,14 @@ public class CategoryServiceImpl implements ICategoryService {
         return List.of();
     }
 
+    @Override
+    public CategoryDTO getCategoryById(Long idCategory) {
+        return null;
+    }
+
+    @Override
+    public CategoryDTO getActiveCategoryById(Long idCategory) {
+        return null;
+    }
+
 }
