@@ -28,6 +28,7 @@ public class CategoryServiceImpl implements ICategoryService {
     @Transactional
     public CategoryDTO createCategory(UserDTO user, CategoryRequest request) {
         var entity = new CategoryEntity();
+        entity.setActive(true);
         return createOrUpdateCategory(entity, request, user);
     }
 
