@@ -1,6 +1,8 @@
 package com.jdbayer.cuentas.config.controller;
 
+import com.jdbayer.cuentas.api.exceptions.base.BadRequestException;
 import com.jdbayer.cuentas.api.exceptions.base.NotFoundException;
+import com.jdbayer.cuentas.api.exceptions.security.EmailException;
 import com.jdbayer.cuentas.api.exceptions.security.UnauthorizedException;
 import com.jdbayer.cuentas.api.models.responses.base.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.PRECONDITION_FAILED;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Slf4j
 @RestControllerAdvice
@@ -64,6 +67,12 @@ public class ControllerAdvice {
         return buildErrorResponse(t, t.getMessage(), NOT_FOUND);
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handlerBadRequestException(final BadRequestException t) {
+        return buildErrorResponse(t, t.getMessage(), BAD_REQUEST);
+    }
+
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(UNAUTHORIZED)
     public ResponseEntity<ErrorResponse> handlerUnauthorizedException(final UnauthorizedException t) {
@@ -74,6 +83,12 @@ public class ControllerAdvice {
     @ResponseStatus(PRECONDITION_FAILED)
     public ResponseEntity<ErrorResponse> handlerIllegalArgumentException(final IllegalArgumentException t) {
         return buildErrorResponse(t, t.getMessage(), PRECONDITION_FAILED);
+    }
+
+    @ExceptionHandler(EmailException.class)
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorResponse> handlerEmailException(final EmailException t) {
+        return buildErrorResponse(t, t.getMessage(), INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
