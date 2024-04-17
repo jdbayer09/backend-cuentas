@@ -62,7 +62,7 @@ public class CategoryController {
                 return ResponseEntity.status(HttpStatus.CREATED).body(
                         new MessageResponse<>(
                                 "Éxito!",
-                                "Su categoría se ha creado con éxito.",
+                                "La categoría se ha creado con éxito.",
                                 mapper.dtoToBaseResponse(categoryDto)
                         )
                 );
@@ -78,7 +78,7 @@ public class CategoryController {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse<>(
                                 "Éxito!",
-                                "Su categoría se ha actualizado con éxito.",
+                                "La categoría se ha actualizado con éxito.",
                                 mapper.dtoToBaseResponse(categoryDto)
                         )
                 );
@@ -95,7 +95,7 @@ public class CategoryController {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse<>(
                                 "Éxito!",
-                                "Su categoría se ha deshabilitado con éxito.",
+                                "La categoría se ha deshabilitado con éxito.",
                                 idCategory
                         )
                 );
@@ -112,7 +112,7 @@ public class CategoryController {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new MessageResponse<>(
                                 "Éxito!",
-                                "Su categoría se ha habilitado con éxito.",
+                                "La categoría se ha habilitado con éxito.",
                                 idCategory
                         )
                 );
