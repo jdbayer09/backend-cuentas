@@ -113,6 +113,8 @@ public class ControllerAdvice {
             message = "El Correo Electrónico introducido ya está registrado (" + val + ")";
         else if (error.contains("category_unique_name"))
             message = "Esta categoría ya esta registrada (" + val + ")";
+        else if (error.contains("payment_methods_unique_name"))
+            message = "Este método de pago ya esta registrado (" + val + ")";
         return message;
     }
 
