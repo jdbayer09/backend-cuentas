@@ -1,7 +1,9 @@
 package com.jdbayer.cuentas.api.models.requests.core;
 
+import com.jdbayer.cuentas.api.models.enums.Color;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,6 +38,6 @@ public class CategoryRequest implements Serializable {
     private String icon;
 
     @Schema(description = "Color para identificar la categoría")
-    @NotBlank(message = "El color es requerido")
-    private String color;
+    @NotNull(message = "El color es requerido")
+    private Color color;
 }

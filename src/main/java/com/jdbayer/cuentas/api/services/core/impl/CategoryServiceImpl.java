@@ -42,9 +42,9 @@ public class CategoryServiceImpl implements ICategoryService {
     private CategoryDTO createOrUpdateCategory(CategoryEntity category, CategoryRequest request, UserDTO user) {
         category.setUser(userMapper.dtoToEntity(user));
         category.setName(request.getName().toUpperCase().trim());
-        category.setDescription(request.getDescription().trim());
+        category.setDescription(request.getDescription());
         category.setIcon(request.getIcon().toLowerCase().trim());
-        category.setColor(request.getColor().toLowerCase().trim());
+        category.setColor(request.getColor());
         return mapper.entityToDto(categoryRepository.save(category));
     }
 

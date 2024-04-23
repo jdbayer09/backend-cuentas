@@ -1,6 +1,7 @@
 package com.jdbayer.cuentas.api.models.dto.core;
 
 import com.jdbayer.cuentas.api.models.dto.admin.UserDTO;
+import com.jdbayer.cuentas.api.models.enums.Color;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +22,7 @@ public class CategoryDTO implements Serializable {
     private Long id;
     private ZonedDateTime createdAt;
     private String name;
-    private String color;
+    private Color color;
     private String icon;
     private String description;
     private UserDTO user;

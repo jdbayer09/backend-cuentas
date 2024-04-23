@@ -2,8 +2,11 @@ package com.jdbayer.cuentas.api.models.entities.core;
 
 import com.jdbayer.cuentas.api.models.entities.BaseEntity;
 import com.jdbayer.cuentas.api.models.entities.admin.UserEntity;
+import com.jdbayer.cuentas.api.models.enums.Color;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
@@ -32,7 +35,8 @@ public class CategoryEntity extends BaseEntity {
     private String name;
 
     @Column(name = "color", length = 16, nullable = false)
-    private String color;
+    @Enumerated(EnumType.STRING)
+    private Color color;
 
     @Column(name = "icon", length = 20, nullable = false)
     private String icon;
