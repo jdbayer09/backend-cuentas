@@ -13,18 +13,20 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serial;
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "payment_methods", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"name", "id_user"}, name = "payment_methods_unique_name")
+@Table(name = "cash_receipts", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name", "id_user"}, name = "cash_receipts_unique_name")
 })
 @Getter
 @Setter
 @ToString
-public class PaymentMethodEntity extends BaseUserEntity {
+public class CashReceiptEntity extends BaseUserEntity {
+
 
     @Serial
-    private static final long serialVersionUID = 5046404703385700084L;
+    private static final long serialVersionUID = -1910357017255211783L;
 
     @Column(name = "name", length = 60, nullable = false)
     private String name;
@@ -33,12 +35,15 @@ public class PaymentMethodEntity extends BaseUserEntity {
     @Enumerated(EnumType.STRING)
     private Color color;
 
-    @Column(name = "icon", length = 20, nullable = false)
-    private String icon;
+    @Column(name = "amount", nullable = false, precision = 15, scale = 2, columnDefinition = "NUMERIC")
+    private BigDecimal amount;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
+    @Column(name = "month", nullable = false)
+    private Integer month;
 
-    @Column(name = "is_active", nullable = false)
-    private boolean active;
+    @Column(name = "year", nullable = false)
+    private Integer year;
+
+    @Column(name = "is_paid", nullable = false)
+    private boolean paid;
 }
