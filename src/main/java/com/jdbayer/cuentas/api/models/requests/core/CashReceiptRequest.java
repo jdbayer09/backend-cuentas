@@ -54,4 +54,14 @@ public class CashReceiptRequest implements Serializable {
     @Schema(description = "Color para identificar el ingreso")
     @NotNull(message = "El color es requerido")
     private Color color;
+
+    @Schema(description = "Bandera que indica si desea replicar")
+    @NotNull(message = "El valor de replica es requerido")
+    private Boolean replicate;
+
+    @Schema(description = "Valor que indica la cantidad de replicas que desea ingresar.")
+    @NotNull(message = "El valor de replica es requerido")
+    @Min(value = 0, message = "No puede ingresar un numero menor a 0.")
+    @Max(value = 12, message = "No se puede replicar mas de 12 veces el ingreso.")
+    private Integer replicateVal;
 }

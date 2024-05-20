@@ -115,6 +115,8 @@ public class ControllerAdvice {
             message = "Esta categoría ya esta registrada (" + val + ")";
         else if (error.contains("payment_methods_unique_name"))
             message = "Este método de pago ya esta registrado (" + val + ")";
+        else if (error.contains("cash_receipts_unique_name"))
+            message = "Ya hay un ingreso registrado con el siguiente valor (" + val + ")";
         return message;
     }
 

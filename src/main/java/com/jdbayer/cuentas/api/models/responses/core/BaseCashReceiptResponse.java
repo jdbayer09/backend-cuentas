@@ -18,6 +18,8 @@ public record BaseCashReceiptResponse(
         @Schema(description = "Mes en el que se va a registrar el ingreso")
         Integer month,
         @Schema(description = "Año en el que se va a registrar el ingreso")
-        Integer year
+        Integer year,
+        @Schema(description = "Identifica si ya se ha pagado o no el dinero")
+        boolean paid
 ) {
 }

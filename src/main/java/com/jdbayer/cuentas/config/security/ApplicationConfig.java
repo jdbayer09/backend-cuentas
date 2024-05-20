@@ -15,17 +15,8 @@ public class ApplicationConfig {
 
     private final IUserService userService;
 
-    @Value("${spring.mail.username}")
-    private String email;
-
-    @Value("${spring.mail.password}")
-    private String password;
-
     @Bean
     public UserDetailsService userDetailsService() {
-
-        log.info("Email: " + email + ", pass: " + password);
-
         return userService::getUserDetailByEmail;
     }
 }

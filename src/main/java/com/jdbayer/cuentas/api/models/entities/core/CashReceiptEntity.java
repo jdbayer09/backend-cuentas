@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "cash_receipts", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"name", "id_user"}, name = "cash_receipts_unique_name")
+        @UniqueConstraint(columnNames = {"name", "id_user", "month", "year"}, name = "cash_receipts_unique_name")
 })
 @Getter
 @Setter
