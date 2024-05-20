@@ -5,6 +5,7 @@ import com.jdbayer.cuentas.api.models.requests.core.CashReceiptRequest;
 import com.jdbayer.cuentas.api.models.responses.base.ErrorResponse;
 import com.jdbayer.cuentas.api.models.responses.base.MessageResponse;
 import com.jdbayer.cuentas.api.models.responses.core.BaseCashReceiptResponse;
+import com.jdbayer.cuentas.api.models.responses.core.CategoryResponse;
 import com.jdbayer.cuentas.api.services.admin.IUserService;
 import com.jdbayer.cuentas.api.services.core.ICashReceiptService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,13 +21,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/cash-receipt")
@@ -75,6 +80,36 @@ public class CashReceiptController {
                                 "El ingreso se ha actualizado con éxito.",
                                 mapper.dtoToBaseResponse(cashReceiptDto)
                         )
+                );
+        }
+
+        @PutMapping("/pay/{idCashReceipt}")
+        @ResponseStatus(HttpStatus.OK)
+        @Operation(summary = "Función para marcar como pago.")
+        public ResponseEntity<MessageResponse<BaseCashReceiptResponse>> payCashReceipt(Authentication auth, @PathVariable Long idCashReceipt) {
+                var userDto = userService.getUserByEmail(auth.getName());
+                var cashReceiptDto = cashReceiptService.payCashReceipt(userDto, idCashReceipt);
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new MessageResponse<>(
+                                "Éxito!",
+                                "El ingreso se ha marcado como pago.",
+                                mapper.dtoToBaseResponse(cashReceiptDto)
+                        )
+                );
+        }
+
+        @GetMapping("/list-all")
+        @ResponseStatus(HttpStatus.OK)
+        @Operation(summary = "Lista todos los ingreso")
+        public ResponseEntity<List<BaseCashReceiptResponse>> listAllCashReceipt(
+                Authentication auth,
+                @RequestParam int month,
+                @RequestParam int year
+        ) {
+                var userDto = userService.getUserByEmail(auth.getName());
+                var listCashReceiptDTO = cashReceiptService.listAllCashReceipt(userDto, month, year);
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        listCashReceiptDTO.stream().map(mapper::dtoToBaseResponse).toList()
                 );
         }
 }
