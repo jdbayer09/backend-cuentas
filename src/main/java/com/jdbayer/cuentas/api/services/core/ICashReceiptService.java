@@ -10,5 +10,6 @@ public interface ICashReceiptService {
     CashReceiptDTO createCashReceipt(UserDTO user, CashReceiptRequest request);
     CashReceiptDTO updateCashReceipt(UserDTO user, CashReceiptRequest request, Long idCashReceipt);
     CashReceiptDTO payCashReceipt(UserDTO user, Long idCashReceipt);
+    CashReceiptDTO deleteCashReceipt(UserDTO user, Long idCashReceipt);
     List<CashReceiptDTO> listAllCashReceipt(UserDTO user, int month, int year);
 }

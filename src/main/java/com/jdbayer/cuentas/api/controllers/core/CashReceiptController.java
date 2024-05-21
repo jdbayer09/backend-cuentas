@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -96,6 +97,21 @@ public class CashReceiptController {
                         new MessageResponse<>(
                                 "Éxito!",
                                 "El ingreso se ha marcado como pago.",
+                                mapper.dtoToBaseResponse(cashReceiptDto)
+                        )
+                );
+        }
+
+        @DeleteMapping("/delete/{idCashReceipt}")
+        @ResponseStatus(HttpStatus.OK)
+        @Operation(summary = "Función para marcar como pago.")
+        public ResponseEntity<MessageResponse<BaseCashReceiptResponse>> deleteCashReceipt(Authentication auth, @PathVariable Long idCashReceipt) {
+                var userDto = userService.getUserByEmail(auth.getName());
+                var cashReceiptDto = cashReceiptService.deleteCashReceipt(userDto, idCashReceipt);
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new MessageResponse<>(
+                                "Éxito!",
+                                "El ingreso se ha eliminado.",
                                 mapper.dtoToBaseResponse(cashReceiptDto)
                         )
                 );

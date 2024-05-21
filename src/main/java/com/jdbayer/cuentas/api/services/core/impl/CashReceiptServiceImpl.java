@@ -10,7 +10,6 @@ import com.jdbayer.cuentas.api.models.requests.core.CashReceiptRequest;
 import com.jdbayer.cuentas.api.repositories.ICashReceiptRepository;
 import com.jdbayer.cuentas.api.services.core.ICashReceiptService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +68,17 @@ public class CashReceiptServiceImpl implements ICashReceiptService {
         var entity = cashReceiptRepository.findByIdAndUser_Id(idCashReceipt, user.getId()).orElseThrow( () -> new NotExistCashReceiptException(NOT_EXIST_MESSAGE));
         entity.setPaid(true);
         return cashReceiptMapper.entityToDto(cashReceiptRepository.save(entity));
+    }
+
+    @Override
+    @Transactional
+    public CashReceiptDTO deleteCashReceipt(UserDTO user, Long idCashReceipt) {
+        var entity = cashReceiptRepository.findByIdAndUser_Id(idCashReceipt, user.getId()).orElseThrow( () -> new NotExistCashReceiptException(NOT_EXIST_MESSAGE));
+        if (entity.isPaid()) {
+            throw new NotExistCashReceiptException("No se puede eliminar el ingreso");
+        }
+        cashReceiptRepository.delete(entity);
+        return cashReceiptMapper.entityToDto(entity);
     }
 
     @Override
