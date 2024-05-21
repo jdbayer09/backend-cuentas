@@ -1,11 +1,13 @@
 package com.jdbayer.cuentas.api.controllers.core;
 
+import com.jdbayer.cuentas.api.models.dto.core.CashReceiptDTO;
 import com.jdbayer.cuentas.api.models.mappers.CashReceiptMapper;
 import com.jdbayer.cuentas.api.models.requests.core.CashReceiptRequest;
 import com.jdbayer.cuentas.api.models.responses.base.ErrorResponse;
 import com.jdbayer.cuentas.api.models.responses.base.MessageResponse;
 import com.jdbayer.cuentas.api.models.responses.core.BaseCashReceiptResponse;
 import com.jdbayer.cuentas.api.models.responses.core.CategoryResponse;
+import com.jdbayer.cuentas.api.models.responses.core.DashboardCashReceiptResponse;
 import com.jdbayer.cuentas.api.services.admin.IUserService;
 import com.jdbayer.cuentas.api.services.core.ICashReceiptService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -110,6 +113,34 @@ public class CashReceiptController {
                 var listCashReceiptDTO = cashReceiptService.listAllCashReceipt(userDto, month, year);
                 return ResponseEntity.status(HttpStatus.OK).body(
                         listCashReceiptDTO.stream().map(mapper::dtoToBaseResponse).toList()
+                );
+        }
+
+        @GetMapping("/dashboard")
+        @ResponseStatus(HttpStatus.OK)
+        @Operation(summary = "Metodo para cargar el dashboard de ingresos")
+        public ResponseEntity<DashboardCashReceiptResponse> dashboardCashReceipt(
+                Authentication auth,
+                @RequestParam int month,
+                @RequestParam int year
+        ) {
+                var userDto = userService.getUserByEmail(auth.getName());
+                var listAllCashReceipt = cashReceiptService.listAllCashReceipt(userDto, month, year);
+
+                double expectedValue = 0;
+                double totalPaid = 0;
+                for(CashReceiptDTO item : listAllCashReceipt) {
+                        expectedValue += item.getAmount().doubleValue();
+                        if (item.isPaid()){
+                                totalPaid += item.getAmount().doubleValue();
+                        }
+                }
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new DashboardCashReceiptResponse(
+                                listAllCashReceipt.stream().map(mapper::dtoToBaseResponse).toList(),
+                                BigDecimal.valueOf(expectedValue),
+                                BigDecimal.valueOf(totalPaid)
+                        )
                 );
         }
 }
