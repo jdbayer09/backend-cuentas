@@ -13,6 +13,6 @@ public interface ICashReceiptRepository extends JpaRepository<CashReceiptEntity,
 
     Optional<CashReceiptEntity> findByIdAndUser_Id(Long id, Long userId);
 
-    @Query("SELECT cr FROM CashReceiptEntity cr WHERE cr.user.id = ?1 AND cr.month = ?2 AND cr.year = ?3 ORDER BY cr.name")
+    @Query("SELECT cr FROM CashReceiptEntity cr WHERE cr.user.id = ?1 AND cr.month = ?2 AND cr.year = ?3 ORDER BY cr.paid")
     List<CashReceiptEntity> fetchAllFilter(Long id, int month, int year);
 }
