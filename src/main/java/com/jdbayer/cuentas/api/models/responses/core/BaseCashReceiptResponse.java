@@ -4,6 +4,7 @@ import com.jdbayer.cuentas.api.models.enums.Color;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
 @Schema(description = "Información de respuesta de un ingreso")
 public record BaseCashReceiptResponse(
@@ -20,6 +21,8 @@ public record BaseCashReceiptResponse(
         @Schema(description = "Año en el que se va a registrar el ingreso")
         Integer year,
         @Schema(description = "Identifica si ya se ha pagado o no el dinero")
-        boolean paid
+        boolean paid,
+        @Schema(description = "Fecha de creación del pago")
+        ZonedDateTime createdAt
 ) {
 }
