@@ -90,6 +90,7 @@ public class PaymentMethodServiceImpl implements IPaymentMethodService {
         paymentMethod.setDescription(request.getDescription());
         paymentMethod.setIcon(request.getIcon().toLowerCase().trim());
         paymentMethod.setColor(request.getColor());
+        paymentMethod.setPaymentDate(request.getPaymentDate());
         return mapper.entityToDto(paymentMethodRepository.save(paymentMethod));
     }
 }
