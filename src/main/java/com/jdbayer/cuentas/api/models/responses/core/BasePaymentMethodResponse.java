@@ -12,6 +12,8 @@ public record BasePaymentMethodResponse(
         @Schema(description = "Color para identificar el método de pago")
         Color color,
         @Schema(description = "Icono para personalizar el método de pago")
-        String icon
+        String icon,
+        @Schema(description = "Fecha maxima para pagar")
+        int paymentDate
 ) {
 }

@@ -28,4 +28,5 @@ public class PaymentMethodDTO implements Serializable {
     private String description;
     private UserDTO user;
     private boolean active;
+    private int paymentDate;
 }

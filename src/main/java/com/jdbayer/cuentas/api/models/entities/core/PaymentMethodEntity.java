@@ -41,4 +41,7 @@ public class PaymentMethodEntity extends BaseUserEntity {
 
     @Column(name = "is_active", nullable = false)
     private boolean active;
+
+    @Column(name = "payment_date", nullable = false)
+    private int paymentDate;
 }
