@@ -20,6 +20,8 @@ public record PaymentMethodResponse(
         @Schema(description = "Bandera para identificar si esta activo el método de pago")
         boolean active,
         @Schema(description = "Fecha de creación del método de pago")
-        ZonedDateTime createdAt
+        ZonedDateTime createdAt,
+        @Schema(description = "Fecha maxima donde se puede pagar")
+        int paymentDate
         ) {
 }
