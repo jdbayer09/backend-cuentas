@@ -29,22 +29,22 @@ public class CostRequest implements Serializable {
     @Serial
     private static final long serialVersionUID = 8882725720504411508L;
 
-    @Schema(description = "Nombres del ingreso")
+    @Schema(description = "Nombres del gasto")
     @NotBlank(message = "El nombre es requerido")
     private String name;
 
-    @Schema(description = "Valor total del ingreso a almacenar")
-    @NotNull(message = "El ingreso es requerido")
-    @DecimalMin(value = "0.00", message = "No puede tener un ingreso menor a 0.00")
+    @Schema(description = "Valor total del gasto a almacenar")
+    @NotNull(message = "El gasto es requerido")
+    @DecimalMin(value = "0.00", message = "No puede tener un gasto menor a 0.00")
     private BigDecimal amount;
 
-    @Schema(description = "Mes del ingreso")
+    @Schema(description = "Mes del gasto")
     @NotNull(message = "El mes es requerido")
     @Min(value = 1, message = "El mes mínimo es 1")
     @Max(value = 12, message = "El mes máximo es 12")
     private Integer month;
 
-    @Schema(description = "Año del ingreso")
+    @Schema(description = "Año del gasto")
     @NotNull(message = "El año es requerido")
     @Min(value = 2022, message = "El año no puede ser menos a 2022")
     private Integer year;
