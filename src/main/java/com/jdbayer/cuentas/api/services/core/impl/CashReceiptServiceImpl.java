@@ -49,11 +49,7 @@ public class CashReceiptServiceImpl implements ICashReceiptService {
         return resp;
     }
 
-    private CashReceiptDTO createCashReceiptAction(UserDTO user, CashReceiptRequest request) {
-        var entity = new CashReceiptEntity();
-        entity.setPaid(false);
-        return createOrUpdateCashReceipt(user, request, entity);
-    }
+
 
     @Override
     @Transactional
@@ -86,6 +82,12 @@ public class CashReceiptServiceImpl implements ICashReceiptService {
     public List<CashReceiptDTO> listAllCashReceipt(UserDTO user, int month, int year) {
         var listCashReceipt = cashReceiptRepository.fetchAllFilter(user.getId(), month, year);
         return listCashReceipt.stream().map(cashReceiptMapper::entityToDto).toList();
+    }
+
+    private CashReceiptDTO createCashReceiptAction(UserDTO user, CashReceiptRequest request) {
+        var entity = new CashReceiptEntity();
+        entity.setPaid(false);
+        return createOrUpdateCashReceipt(user, request, entity);
     }
 
     private CashReceiptDTO createOrUpdateCashReceipt(UserDTO user, CashReceiptRequest request, CashReceiptEntity entity) {

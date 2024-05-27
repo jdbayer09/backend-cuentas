@@ -83,19 +83,12 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public CategoryDTO getCategoryById(UserDTO user, Long idCategory) {
-        var entity = categoryRepository.findByIdAndUser_Id(idCategory, user.getId()).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
-        return mapper.entityToDto(entity);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public CategoryDTO getActiveCategoryById(UserDTO user, Long idCategory) {
+    public CategoryEntity getActiveCategoryById(UserDTO user, Long idCategory) {
         var entity = categoryRepository.findByIdAndUser_Id(idCategory, user.getId()).orElseThrow(() -> new NotExistCategoryException(NOT_EXIST_MESSAGE));
         if (!entity.isActive()) {
             throw new NotExistCategoryException("La categoría no esta activa");
         }
-        return mapper.entityToDto(entity);
+        return entity;
     }
 
 }

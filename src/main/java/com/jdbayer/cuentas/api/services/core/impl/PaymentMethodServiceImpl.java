@@ -72,21 +72,16 @@ public class PaymentMethodServiceImpl implements IPaymentMethodService {
         return paymentMethods.stream().map(mapper::entityToDto).toList();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public PaymentMethodDTO getPaymentMethodById(UserDTO user, Long idPaymentMethod) {
-        var entity = paymentMethodRepository.findByIdAndUser_Id(idPaymentMethod, user.getId()).orElseThrow(() -> new NotExistPaymentMethodException(NOT_EXIST_MESSAGE));
-        return mapper.entityToDto(entity);
-    }
+
 
     @Override
     @Transactional(readOnly = true)
-    public PaymentMethodDTO getActivePaymentMethodById(UserDTO user, Long idPaymentMethod) {
+    public PaymentMethodEntity getActivePaymentMethodById(UserDTO user, Long idPaymentMethod) {
         var entity = paymentMethodRepository.findByIdAndUser_Id(idPaymentMethod, user.getId()).orElseThrow(() -> new NotExistPaymentMethodException(NOT_EXIST_MESSAGE));
         if (!entity.isActive()) {
             throw new NotExistPaymentMethodException("El método de pago no esta activo");
         }
-        return mapper.entityToDto(entity);
+        return entity;
     }
 
     private PaymentMethodDTO createOrUpdatePaymentMethod(PaymentMethodEntity paymentMethod, PaymentMethodRequest request, UserDTO user) {
