@@ -143,19 +143,19 @@ public class CashReceiptController {
                 var userDto = userService.getUserByEmail(auth.getName());
                 var listAllCashReceipt = cashReceiptService.listAllCashReceipt(userDto, month, year);
 
-                double expectedValue = 0;
-                double totalPaid = 0;
+                var totalPaid = new BigDecimal(0);
+                var expectedValue = new BigDecimal(0);
                 for(CashReceiptDTO item : listAllCashReceipt) {
-                        expectedValue += item.getAmount().doubleValue();
+                        expectedValue = expectedValue.add(item.getAmount());
                         if (item.isPaid()){
-                                totalPaid += item.getAmount().doubleValue();
+                                totalPaid = totalPaid.add(item.getAmount());
                         }
                 }
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new DashboardCashReceiptResponse(
                                 listAllCashReceipt.stream().map(mapper::dtoToBaseResponse).toList(),
-                                BigDecimal.valueOf(expectedValue),
-                                BigDecimal.valueOf(totalPaid)
+                                expectedValue,
+                                totalPaid
                         )
                 );
         }
